@@ -1,7 +1,7 @@
 // Torah Daily – Service Worker
 // Caches the app shell for offline use; Sefaria passages fetched fresh each time
 
-const CACHE = 'torah-daily-v1';
+const CACHE = 'torah-daily-v2';
 const SHELL = [
   './',
   './index.html',
@@ -25,6 +25,23 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
+
+  // Cache-first for local Torah data files (pre-downloaded JSON)
+  if (url.pathname.startsWith('/data/') && url.origin === self.location.origin) {
+    e.respondWith(
+      caches.match(e.request).then(cached => {
+        if (cached) return cached;
+        return fetch(e.request).then(res => {
+          if (res.ok) {
+            const clone = res.clone();
+            caches.open(CACHE).then(c => c.put(e.request, clone));
+          }
+          return res;
+        }).catch(() => new Response('{}', { headers: { 'Content-Type': 'application/json' } }));
+      })
+    );
+    return;
+  }
 
   // Network-first for Sefaria API and Claude API (always fresh)
   if (url.hostname === 'www.sefaria.org' || url.hostname === 'api.anthropic.com') {
