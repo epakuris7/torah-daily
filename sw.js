@@ -1,12 +1,27 @@
 // Torah Daily – Service Worker
-// Caches the app shell for offline use; Sefaria passages fetched fresh each time
+// Caches the app shell + all Torah data for full offline use
 
-const CACHE = 'torah-daily-v2';
+const CACHE = 'torah-daily-v3';
+
+const DATA_FILES = [
+  'Bereshit','Noach','Lech-Lecha','Vayera','Chayei-Sara','Toldot',
+  'Vayetzei','Vayishlach','Vayeshev','Miketz','Vayigash','Vayechi',
+  'Shemot','Vaera','Bo','Beshalach','Yitro','Mishpatim','Terumah',
+  'Tetzaveh','Ki-Tisa','Vayakhel','Pekudei',
+  'Vayikra','Tzav','Shmini','Tazria','Metzora','Achrei-Mot','Kedoshim',
+  'Emor','Behar','Bechukotai',
+  'Bamidbar','Nasso','Behaalotcha','Shlach','Korach','Chukat','Balak',
+  'Pinchas','Matot','Masei',
+  'Devarim','Vaetchanan','Eikev','Reeh','Shoftim','Ki-Teitzei','Ki-Tavo',
+  'Nitzavim','Vayeilech','Haazinu','VZot-HaBerachah',
+].map(id => `./data/${id}.json`);
+
 const SHELL = [
   './',
   './index.html',
   './manifest.json',
   'https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Frank+Ruhl+Libre:wght@300;400;500&family=Inter:wght@300;400;500&display=swap',
+  ...DATA_FILES,
 ];
 
 self.addEventListener('install', e => {

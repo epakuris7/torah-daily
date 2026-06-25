@@ -76,6 +76,7 @@
       line-height: 1.3;
     }
     .header-title span { display: block; color: var(--parchment); font-size: 0.82rem; letter-spacing: 0.06em; }
+    @media (max-width: 420px) { .header-title { display: none; } }
 
     /* ── PARASHA SELECTOR ── */
     .parasha-bar {
@@ -105,6 +106,26 @@
     }
     .parasha-chip:hover { color: var(--gold-light); border-color: var(--gold); }
     .parasha-chip.active { background: var(--gold); border-color: var(--gold); color: var(--ink); font-weight: 500; }
+    .parasha-chip.today-parasha { border-color: var(--rust); }
+    .parasha-chip.today-parasha::after { content: '·'; margin-left: 5px; color: var(--rust); }
+    .today-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: var(--rust);
+      color: var(--parchment);
+      border: 1px solid var(--rust);
+      border-radius: 20px;
+      padding: 5px 14px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.18s;
+      flex-shrink: 0;
+      font-weight: 500;
+    }
+    .today-btn:hover { background: #a04020; border-color: #a04020; }
+    .bar-divider { width: 1px; height: 18px; background: #3a2e1e; flex-shrink: 0; }
 
     /* ── MAIN LAYOUT ── */
     main { max-width: 860px; margin: 0 auto; padding: 28px 16px 80px; }
@@ -477,6 +498,137 @@
       color: var(--rust);
     }
 
+    /* ── MODE TOGGLE ── */
+    .mode-toggle {
+      display: flex;
+      margin-left: auto;
+      gap: 4px;
+      background: #0e0c06;
+      border-radius: 20px;
+      padding: 3px;
+    }
+    .mode-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border: none;
+      border-radius: 20px;
+      background: transparent;
+      color: #6b5d45;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .mode-btn.active { background: var(--gold); color: var(--ink); font-weight: 500; }
+    .mode-btn:not(.active):hover { color: var(--gold-light); }
+
+    /* ── TANAKH BROWSER ── */
+    .tanakh-section-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 24px 0 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .tanakh-section-label:first-child { margin-top: 0; }
+    .book-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .book-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+      box-shadow: 0 1px 4px var(--shadow);
+    }
+    .book-card:hover { border-color: var(--gold); box-shadow: 0 2px 8px var(--shadow); transform: translateY(-1px); }
+    .book-card-he {
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: var(--gold);
+      direction: rtl;
+      text-align: right;
+      margin-bottom: 4px;
+    }
+    .book-card-en {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+    .chapter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+    .chapter-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      padding: 9px 4px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: white;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: center;
+    }
+    .chapter-btn:hover { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      margin-bottom: 18px;
+      transition: color 0.15s;
+    }
+    .back-btn:hover { color: var(--ink); }
+    .tanakh-header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 20px;
+      background: white;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 12px var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .tanakh-header::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--olive), var(--gold), var(--olive));
+    }
+
+    /* ── HAFTORAH ── */
+    .haftorah-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--olive);
+      margin-bottom: 6px;
+    }
+
     /* ── MOBILE ── */
     @media (max-width: 600px) {
       .verse {
@@ -500,6 +652,10 @@
     <div class="header-title">
       <span>Torah Daily</span>
       Hebrew · English · Commentary
+    </div>
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="mode-parasha" onclick="setMode('parasha')">Parasha</button>
+      <button class="mode-btn" id="mode-tanakh" onclick="setMode('tanakh')">Tanakh</button>
     </div>
   </div>
   <div class="parasha-bar" id="parashot-bar">
@@ -579,14 +735,131 @@ const PARASHOT = [
   { id: 'VZot-HaBerachah', he: 'וְזֹאת הַבְּרָכָה', en: "V'Zot HaBerachah", book: 'Deuteronomy', ref: 'Deuteronomy 33:1-34:12',aliyot: ['Deuteronomy 33:1-33:7','Deuteronomy 33:8-33:12','Deuteronomy 33:13-33:17','Deuteronomy 33:18-33:21','Deuteronomy 33:22-33:26','Deuteronomy 33:27-34:5','Deuteronomy 34:6-34:12'] },
 ];
 
+// ── HAFTORAH REFS (Ashkenaz) ─────────────────────────────────────────────
+const HAFTORAH = {
+  'Bereshit':       'Isaiah 42:5-43:10',
+  'Noach':          'Isaiah 54:1-55:5',
+  'Lech-Lecha':     'Isaiah 40:27-41:16',
+  'Vayera':         'II Kings 4:1-37',
+  'Chayei-Sara':    'I Kings 1:1-31',
+  'Toldot':         'Malachi 1:1-2:7',
+  'Vayetzei':       'Hosea 12:13-14:10',
+  'Vayishlach':     'Hosea 11:7-12:12',
+  'Vayeshev':       'Amos 2:6-3:8',
+  'Miketz':         'I Kings 3:15-4:1',
+  'Vayigash':       'Ezekiel 37:15-28',
+  'Vayechi':        'I Kings 2:1-12',
+  'Shemot':         'Isaiah 27:6-28:13',
+  'Vaera':          'Ezekiel 28:25-29:21',
+  'Bo':             'Jeremiah 46:13-28',
+  'Beshalach':      'Judges 4:4-5:31',
+  'Yitro':          'Isaiah 6:1-7:6',
+  'Mishpatim':      'Jeremiah 34:8-22',
+  'Terumah':        'I Kings 5:26-6:13',
+  'Tetzaveh':       'Ezekiel 43:10-27',
+  'Ki-Tisa':        'I Kings 18:1-39',
+  'Vayakhel':       'I Kings 7:40-50',
+  'Pekudei':        'I Kings 7:51-8:21',
+  'Vayikra':        'Isaiah 43:21-44:23',
+  'Tzav':           'Jeremiah 7:21-8:3',
+  'Shmini':         'II Samuel 6:1-7:17',
+  'Tazria':         'II Kings 4:42-5:19',
+  'Metzora':        'II Kings 7:3-20',
+  'Achrei-Mot':     'Ezekiel 22:1-19',
+  'Kedoshim':       'Amos 9:7-15',
+  'Emor':           'Ezekiel 44:15-31',
+  'Behar':          'Jeremiah 32:6-27',
+  'Bechukotai':     'Jeremiah 16:19-17:14',
+  'Bamidbar':       'Hosea 2:1-22',
+  'Nasso':          'Judges 13:2-25',
+  'Behaalotcha':    'Zechariah 2:14-4:7',
+  'Shlach':         'Joshua 2:1-24',
+  'Korach':         'I Samuel 11:14-12:22',
+  'Chukat':         'Judges 11:1-33',
+  'Balak':          'Micah 5:6-6:8',
+  'Pinchas':        'I Kings 18:46-19:21',
+  'Matot':          'Jeremiah 1:1-2:3',
+  'Masei':          'Jeremiah 2:4-28',
+  'Devarim':        'Isaiah 1:1-27',
+  'Vaetchanan':     'Isaiah 40:1-26',
+  'Eikev':          'Isaiah 49:14-51:3',
+  'Reeh':           'Isaiah 54:11-55:5',
+  'Shoftim':        'Isaiah 51:12-52:12',
+  'Ki-Teitzei':     'Isaiah 54:1-10',
+  'Ki-Tavo':        'Isaiah 60:1-22',
+  'Nitzavim':       'Isaiah 61:10-63:9',
+  'Vayeilech':      'Isaiah 55:6-56:8',
+  'Haazinu':        'II Samuel 22:1-51',
+  'VZot-HaBerachah':'Joshua 1:1-18',
+};
+
+// ── TANAKH BOOK CATALOG ───────────────────────────────────────────────────
+const TANAKH_SECTIONS = [
+  { label: 'Torah', books: [
+    { id: 'Genesis',      he: 'בְּרֵאשִׁית',         en: 'Genesis',      chapters: 50 },
+    { id: 'Exodus',       he: 'שְׁמוֹת',              en: 'Exodus',       chapters: 40 },
+    { id: 'Leviticus',    he: 'וַיִּקְרָא',           en: 'Leviticus',    chapters: 27 },
+    { id: 'Numbers',      he: 'בְּמִדְבַּר',          en: 'Numbers',      chapters: 36 },
+    { id: 'Deuteronomy',  he: 'דְּבָרִים',            en: 'Deuteronomy',  chapters: 34 },
+  ]},
+  { label: "Nevi'im", books: [
+    { id: 'Joshua',       he: 'יְהוֹשֻׁעַ',           en: 'Joshua',       chapters: 24 },
+    { id: 'Judges',       he: 'שׁוֹפְטִים',           en: 'Judges',       chapters: 21 },
+    { id: 'I Samuel',     he: 'שְׁמוּאֵל א',          en: 'I Samuel',     chapters: 31 },
+    { id: 'II Samuel',    he: 'שְׁמוּאֵל ב',          en: 'II Samuel',    chapters: 24 },
+    { id: 'I Kings',      he: 'מְלָכִים א',           en: 'I Kings',      chapters: 22 },
+    { id: 'II Kings',     he: 'מְלָכִים ב',           en: 'II Kings',     chapters: 25 },
+    { id: 'Isaiah',       he: 'יְשַׁעְיָהוּ',          en: 'Isaiah',       chapters: 66 },
+    { id: 'Jeremiah',     he: 'יִרְמְיָהוּ',           en: 'Jeremiah',     chapters: 52 },
+    { id: 'Ezekiel',      he: 'יְחֶזְקֵאל',           en: 'Ezekiel',      chapters: 48 },
+    { id: 'Hosea',        he: 'הוֹשֵׁעַ',              en: 'Hosea',        chapters: 14 },
+    { id: 'Joel',         he: 'יוֹאֵל',               en: 'Joel',         chapters: 4  },
+    { id: 'Amos',         he: 'עָמוֹס',               en: 'Amos',         chapters: 9  },
+    { id: 'Obadiah',      he: 'עֹבַדְיָה',             en: 'Obadiah',      chapters: 1  },
+    { id: 'Jonah',        he: 'יוֹנָה',               en: 'Jonah',        chapters: 4  },
+    { id: 'Micah',        he: 'מִיכָה',               en: 'Micah',        chapters: 7  },
+    { id: 'Nahum',        he: 'נַחוּם',               en: 'Nahum',        chapters: 3  },
+    { id: 'Habakkuk',     he: 'חֲבַקּוּק',             en: 'Habakkuk',     chapters: 3  },
+    { id: 'Zephaniah',    he: 'צְפַנְיָה',             en: 'Zephaniah',    chapters: 3  },
+    { id: 'Haggai',       he: 'חַגַּי',               en: 'Haggai',       chapters: 2  },
+    { id: 'Zechariah',    he: 'זְכַרְיָה',             en: 'Zechariah',    chapters: 14 },
+    { id: 'Malachi',      he: 'מַלְאָכִי',             en: 'Malachi',      chapters: 3  },
+  ]},
+  { label: 'Ketuvim', books: [
+    { id: 'Psalms',        he: 'תְּהִלִּים',           en: 'Psalms',       chapters: 150 },
+    { id: 'Proverbs',      he: 'מִשְׁלֵי',             en: 'Proverbs',     chapters: 31  },
+    { id: 'Job',           he: 'אִיּוֹב',              en: 'Job',          chapters: 42  },
+    { id: 'Song of Songs', he: 'שִׁיר הַשִּׁירִים',    en: 'Song of Songs',chapters: 8   },
+    { id: 'Ruth',          he: 'רוּת',                 en: 'Ruth',         chapters: 4   },
+    { id: 'Lamentations',  he: 'אֵיכָה',               en: 'Lamentations', chapters: 5   },
+    { id: 'Ecclesiastes',  he: 'קֹהֶלֶת',              en: 'Ecclesiastes', chapters: 12  },
+    { id: 'Esther',        he: 'אֶסְתֵּר',             en: 'Esther',       chapters: 10  },
+    { id: 'Daniel',        he: 'דָּנִיֵּאל',            en: 'Daniel',       chapters: 12  },
+    { id: 'Ezra',          he: 'עֶזְרָא',              en: 'Ezra',         chapters: 10  },
+    { id: 'Nehemiah',      he: 'נְחֶמְיָה',            en: 'Nehemiah',     chapters: 13  },
+    { id: 'I Chronicles',  he: 'דִּבְרֵי הַיָּמִים א', en: 'I Chronicles', chapters: 29  },
+    { id: 'II Chronicles', he: 'דִּבְרֵי הַיָּמִים ב', en: 'II Chronicles',chapters: 36  },
+  ]},
+];
+// flat lookup: bookId → book object
+const TANAKH_BOOK_MAP = {};
+TANAKH_SECTIONS.forEach(s => s.books.forEach(b => { TANAKH_BOOK_MAP[b.id] = b; }));
+
 // ── STATE ─────────────────────────────────────────────────────────────────
 let state = {
+  mode: 'parasha',        // 'parasha' | 'tanakh'
   parashaIdx: 0,
   aliyahIdx: 0,
-  tab: 'text',   // 'text' | 'commentary'
+  tab: 'text',            // 'text' | 'commentary' | 'haftorah'
   audioLang: 'en',
   verses: [],
   commentary: '',
+  haftorahVerses: [],
+  haftorahLoading: false,
+  tanakhBook: null,       // book id string
+  tanakhChapter: null,    // chapter number
+  tanakhVerses: [],
+  tanakhLoading: false,
   loading: false,
   speaking: false,
   utterance: null,
@@ -682,21 +955,42 @@ function readAloud() {
 // ── RENDER ─────────────────────────────────────────────────────────────────
 function renderParashotBar() {
   const bar = document.getElementById('parashot-bar');
-  bar.innerHTML = PARASHOT.map((p, i) =>
-    `<button class="parasha-chip${i === state.parashaIdx ? ' active' : ''}" onclick="selectParasha(${i})">${p.en}</button>`
-  ).join('');
+  if (state.mode === 'tanakh') {
+    const book = state.tanakhBook ? TANAKH_BOOK_MAP[state.tanakhBook] : null;
+    bar.innerHTML = book
+      ? `<button class="today-btn" onclick="selectTanakhBook(null)">← Books</button>
+         <div class="bar-divider"></div>
+         <span style="font-family:'Frank Ruhl Libre',serif;color:var(--gold-light);font-size:0.9rem;flex-shrink:0;">${book.he}</span>
+         <div class="bar-divider"></div>
+         <span style="font-family:'Inter',sans-serif;font-size:0.72rem;color:#8a7458;flex-shrink:0;letter-spacing:0.06em;">${book.en}${state.tanakhChapter ? ' · Ch. ' + state.tanakhChapter : ''}</span>`
+      : `<span style="font-family:'Inter',sans-serif;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:#8a7458;flex-shrink:0;">Browse the Tanakh</span>`;
+    return;
+  }
+  const todayIdx = getCurrentParasha();
+  bar.innerHTML =
+    `<button class="today-btn" onclick="goToToday()">Today</button>` +
+    `<div class="bar-divider"></div>` +
+    PARASHOT.map((p, i) =>
+      `<button class="parasha-chip${i === state.parashaIdx ? ' active' : ''}${i === todayIdx ? ' today-parasha' : ''}" onclick="selectParasha(${i})">${p.en}</button>`
+    ).join('');
 }
 
 function renderApp() {
-  const p = PARASHOT[state.parashaIdx];
-  const aliyahRef = p.aliyot[state.aliyahIdx] || p.ref;
   const content = document.getElementById('app-content');
 
+  if (state.mode === 'tanakh') {
+    content.innerHTML = renderTanakhView();
+    return;
+  }
+
+  const p = PARASHOT[state.parashaIdx];
   const aliyahLabels = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th'];
+  const todayIdx = getCurrentParasha();
+  const isToday = state.parashaIdx === todayIdx;
 
   content.innerHTML = `
     <div class="parasha-header">
-      <div class="parasha-eyebrow">${p.book} · Weekly Portion ${state.parashaIdx + 1} of 54</div>
+      <div class="parasha-eyebrow">${isToday ? 'This Week\'s Portion · ' : ''}${p.book} · Weekly Portion ${state.parashaIdx + 1} of 54</div>
       <div class="parasha-name-he">${p.he}</div>
       <div class="parasha-name-en">${p.en}</div>
       <div class="parasha-meta">${p.ref}</div>
@@ -725,11 +1019,12 @@ function renderApp() {
 
     <div class="tabs">
       <button class="tab-btn${state.tab === 'text' ? ' active' : ''}" onclick="setTab('text')">Torah Text</button>
+      <button class="tab-btn${state.tab === 'haftorah' ? ' active' : ''}" onclick="setTab('haftorah')">Haftorah</button>
       <button class="tab-btn${state.tab === 'commentary' ? ' active' : ''}" onclick="setTab('commentary')">Commentary</button>
     </div>
 
     <div id="tab-content">
-      ${state.tab === 'text' ? renderTextTab() : renderCommentaryTab()}
+      ${state.tab === 'text' ? renderTextTab() : state.tab === 'haftorah' ? renderHaftorahTab() : renderCommentaryTab()}
     </div>
 
     <div class="ornament">✦ · ✦ · ✦</div>
@@ -796,6 +1091,169 @@ function renderCommentaryTab() {
     </div>`;
 }
 
+// ── HAFTORAH ──────────────────────────────────────────────────────────────
+function renderHaftorahTab() {
+  const p = PARASHOT[state.parashaIdx];
+  const ref = HAFTORAH[p.id] || '';
+  if (state.haftorahLoading) {
+    return `<div class="loading"><div class="spinner"></div>Loading Haftorah…</div>`;
+  }
+  if (state.haftorahVerses.length) {
+    return `
+      <div style="margin-bottom:12px;">
+        <div class="haftorah-label">Haftorah for ${p.en}</div>
+        <div style="font-family:'EB Garamond',serif;font-size:1rem;color:var(--muted);">${ref}</div>
+      </div>
+      <div class="passage">
+        <div style="display:grid; grid-template-columns:28px 1fr 1fr; background:var(--aged); padding:8px 0; border-bottom:1px solid var(--border);">
+          <div></div>
+          <div style="font-family:'Frank Ruhl Libre',serif; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); text-align:right; padding:0 14px 0 10px; direction:rtl;">עִבְרִית</div>
+          <div style="font-family:'Inter',sans-serif; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); padding:0 0 0 10px;">English</div>
+        </div>
+        ${state.haftorahVerses.map(v => `
+          <div class="verse">
+            <div class="verse-num">${v.num}</div>
+            <div class="verse-he">${v.he}</div>
+            <div class="verse-en">${v.en}</div>
+          </div>
+        `).join('')}
+      </div>`;
+  }
+  return `
+    <div class="commentary-panel" style="text-align:center;">
+      <div style="font-size:2rem; margin-bottom:12px;">📜</div>
+      <div class="haftorah-label" style="margin-bottom:4px;">Haftorah for ${p.en}</div>
+      <div style="font-family:'EB Garamond',serif; font-size:1.1rem; color:var(--muted); margin-bottom:16px;">${ref}</div>
+      <button class="generate-btn" onclick="loadHaftorah()">
+        <svg viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+        Load Haftorah
+      </button>
+    </div>`;
+}
+
+async function loadHaftorah() {
+  const p = PARASHOT[state.parashaIdx];
+  const ref = HAFTORAH[p.id];
+  if (!ref || state.haftorahLoading) return;
+  state.haftorahLoading = true;
+  state.tab = 'haftorah';
+  renderApp();
+  try {
+    const data = await fetchVerses(ref);
+    state.haftorahVerses = parseVerses(data);
+  } catch (e) {
+    console.error(e);
+    state.haftorahVerses = [];
+  }
+  state.haftorahLoading = false;
+  renderApp();
+}
+
+// ── TANAKH BROWSER ─────────────────────────────────────────────────────────
+function setMode(mode) {
+  stopAudio();
+  state.mode = mode;
+  document.getElementById('mode-parasha').classList.toggle('active', mode === 'parasha');
+  document.getElementById('mode-tanakh').classList.toggle('active', mode === 'tanakh');
+  renderParashotBar();
+  renderApp();
+}
+
+function selectTanakhBook(bookId) {
+  state.tanakhBook = bookId;
+  state.tanakhChapter = null;
+  state.tanakhVerses = [];
+  renderParashotBar();
+  renderApp();
+}
+
+function selectTanakhChapter(chapter) {
+  state.tanakhChapter = chapter;
+  state.tanakhVerses = [];
+  renderParashotBar();
+  if (chapter) loadTanakhChapter();
+  else renderApp();
+}
+
+async function loadTanakhChapter() {
+  if (!state.tanakhBook || !state.tanakhChapter) return;
+  state.tanakhLoading = true;
+  renderApp();
+  const ref = `${state.tanakhBook} ${state.tanakhChapter}`;
+  try {
+    const data = await fetchVerses(ref);
+    state.tanakhVerses = parseVerses(data);
+  } catch (e) {
+    console.error(e);
+    state.tanakhVerses = [];
+  }
+  state.tanakhLoading = false;
+  renderApp();
+}
+
+function renderTanakhView() {
+  if (state.tanakhBook && state.tanakhChapter !== null) {
+    const book = TANAKH_BOOK_MAP[state.tanakhBook];
+    if (state.tanakhLoading) {
+      return `
+        <button class="back-btn" onclick="selectTanakhBook('${state.tanakhBook}')">← ${book.en}</button>
+        <div class="loading"><div class="spinner"></div>Loading…</div>`;
+    }
+    return `
+      <button class="back-btn" onclick="selectTanakhBook('${state.tanakhBook}')">← ${book.en}</button>
+      <div class="tanakh-header">
+        <div class="parasha-eyebrow">${book.en} · Chapter ${state.tanakhChapter}</div>
+        <div class="parasha-name-he">${book.he}</div>
+        <div class="parasha-name-en">${book.en} ${state.tanakhChapter}</div>
+      </div>
+      ${state.tanakhVerses.length ? `
+        <div class="passage">
+          <div style="display:grid; grid-template-columns:28px 1fr 1fr; background:var(--aged); padding:8px 0; border-bottom:1px solid var(--border);">
+            <div></div>
+            <div style="font-family:'Frank Ruhl Libre',serif; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); text-align:right; padding:0 14px 0 10px; direction:rtl;">עִבְרִית</div>
+            <div style="font-family:'Inter',sans-serif; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); padding:0 0 0 10px;">English</div>
+          </div>
+          ${state.tanakhVerses.map(v => `
+            <div class="verse">
+              <div class="verse-num">${v.num}</div>
+              <div class="verse-he">${v.he}</div>
+              <div class="verse-en">${v.en}</div>
+            </div>
+          `).join('')}
+        </div>` : `<div class="error-box">Could not load this chapter. Check your connection and try again.</div>`}
+      <div class="ornament">✦ · ✦ · ✦</div>`;
+  }
+
+  if (state.tanakhBook) {
+    const book = TANAKH_BOOK_MAP[state.tanakhBook];
+    return `
+      <button class="back-btn" onclick="selectTanakhBook(null)">← All Books</button>
+      <div class="tanakh-header">
+        <div class="parasha-eyebrow">Select a Chapter</div>
+        <div class="parasha-name-he">${book.he}</div>
+        <div class="parasha-name-en">${book.en}</div>
+        <div class="parasha-meta">${book.chapters} chapters</div>
+      </div>
+      <div class="chapter-grid">
+        ${Array.from({length: book.chapters}, (_, i) => i + 1).map(n =>
+          `<button class="chapter-btn" onclick="selectTanakhChapter(${n})">${n}</button>`
+        ).join('')}
+      </div>`;
+  }
+
+  return TANAKH_SECTIONS.map(section => `
+    <div class="tanakh-section-label">${section.label}</div>
+    <div class="book-grid">
+      ${section.books.map(book => `
+        <div class="book-card" onclick="selectTanakhBook('${book.id}')">
+          <div class="book-card-he">${book.he}</div>
+          <div class="book-card-en">${book.en}</div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
 // ── ACTIONS ────────────────────────────────────────────────────────────────
 async function loadPassage() {
   stopAudio();
@@ -857,9 +1315,10 @@ async function loadCommentary(regenerate = false) {
 function selectParasha(idx) {
   state.parashaIdx = idx;
   state.aliyahIdx = 0;
+  state.haftorahVerses = [];
+  state.haftorahLoading = false;
   renderParashotBar();
   loadPassage();
-  // scroll bar chip into view
   setTimeout(() => {
     const chips = document.querySelectorAll('.parasha-chip');
     if (chips[idx]) chips[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
@@ -873,6 +1332,10 @@ function selectAliyah(idx) {
 
 function setTab(tab) {
   state.tab = tab;
+  if (tab === 'haftorah' && !state.haftorahVerses.length && !state.haftorahLoading) {
+    loadHaftorah();
+    return;
+  }
   renderApp();
 }
 
@@ -884,11 +1347,16 @@ function setAudioLang(lang) {
 
 // ── INIT ───────────────────────────────────────────────────────────────────
 function getCurrentParasha() {
-  // Simple weekly cycle: week of year mod 54
-  const start = new Date(2024, 8, 28); // Bereshit ~Sept 28, 2024
+  // Anchored to Bereshit 5785 = Oct 26, 2024 (Shabbat Bereshit)
+  const anchor = new Date(2024, 9, 26);
   const now = new Date();
-  const weeks = Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000));
+  const weeks = Math.floor((now - anchor) / (7 * 24 * 60 * 60 * 1000));
   return ((weeks % 54) + 54) % 54;
+}
+
+function goToToday() {
+  const idx = getCurrentParasha();
+  selectParasha(idx);
 }
 
 renderParashotBar();
