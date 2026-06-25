@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Torah Daily | תורה יומי</title>
+  <meta name="description" content="Daily Torah readings with Hebrew, English, audio, and commentary" />
+  <meta name="theme-color" content="#1a1209" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Torah Daily" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Frank+Ruhl+Libre:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink:       #1a1209;
+      --parchment: #f5f0e4;
+      --aged:      #e8dfc8;
+      --gold:      #b8922a;
+      --gold-light:#d4a93a;
+      --rust:      #8b3a1a;
+      --olive:     #4a5c2e;
+      --muted:     #6b5d45;
+      --panel:     #faf7f0;
+      --border:    #d4c9a8;
+      --shadow:    rgba(26,18,9,0.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      font-family: 'EB Garamond', Georgia, serif;
+      background: var(--parchment);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--ink);
+      color: var(--parchment);
+      padding: env(safe-area-inset-top, 0) 0 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 16px var(--shadow);
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+    }
+    .header-logo {
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 1.7rem;
+      font-weight: 300;
+      color: var(--gold-light);
+      letter-spacing: 0.01em;
+      line-height: 1;
+    }
+    .header-divider { width: 1px; height: 28px; background: #3a2e1e; }
+    .header-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #a89478;
+      line-height: 1.3;
+    }
+    .header-title span { display: block; color: var(--parchment); font-size: 0.82rem; letter-spacing: 0.06em; }
+
+    /* ── PARASHA SELECTOR ── */
+    .parasha-bar {
+      background: #241c0f;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .parasha-bar::-webkit-scrollbar { display: none; }
+    .parasha-chip {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #8a7458;
+      background: transparent;
+      border: 1px solid #3a2e1e;
+      border-radius: 20px;
+      padding: 5px 14px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.18s;
+      flex-shrink: 0;
+    }
+    .parasha-chip:hover { color: var(--gold-light); border-color: var(--gold); }
+    .parasha-chip.active { background: var(--gold); border-color: var(--gold); color: var(--ink); font-weight: 500; }
+
+    /* ── MAIN LAYOUT ── */
+    main { max-width: 860px; margin: 0 auto; padding: 28px 16px 80px; }
+
+    /* ── PARASHA HEADING ── */
+    .parasha-header {
+      text-align: center;
+      margin-bottom: 28px;
+      padding: 28px 20px 24px;
+      background: white;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 12px var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    .parasha-header::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--rust), var(--gold), var(--rust));
+    }
+    .parasha-eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .parasha-name-he {
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 2.4rem;
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+      direction: rtl;
+      margin-bottom: 4px;
+    }
+    .parasha-name-en {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.4rem;
+      font-style: italic;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .parasha-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── AUDIO PLAYER ── */
+    .audio-panel {
+      background: var(--ink);
+      color: var(--parchment);
+      border-radius: 4px;
+      padding: 18px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 2px 12px var(--shadow);
+    }
+    .audio-btn {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s, transform 0.12s;
+    }
+    .audio-btn:hover { background: var(--gold-light); transform: scale(1.05); }
+    .audio-btn svg { width: 18px; height: 18px; fill: var(--ink); }
+    .audio-info { flex: 1; min-width: 0; }
+    .audio-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #8a7458;
+      margin-bottom: 2px;
+    }
+    .audio-title {
+      font-size: 0.95rem;
+      color: var(--parchment);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .audio-lang-toggle {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .lang-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 10px;
+      border-radius: 3px;
+      border: 1px solid #3a2e1e;
+      background: transparent;
+      color: #8a7458;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .lang-btn.active { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+    .audio-progress {
+      width: 100%;
+      accent-color: var(--gold);
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    /* ── TABS ── */
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 20px;
+      gap: 0;
+    }
+    .tab-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 10px 20px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.15s;
+    }
+    .tab-btn:hover { color: var(--ink); }
+    .tab-btn.active { color: var(--rust); border-bottom-color: var(--rust); font-weight: 500; }
+
+    /* ── ALIYAH SELECTOR ── */
+    .aliyah-nav {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .aliyah-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      padding: 5px 12px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: white;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .aliyah-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .aliyah-btn.active { background: var(--rust); border-color: var(--rust); color: white; }
+
+    /* ── PASSAGE TEXT ── */
+    .passage {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 8px var(--shadow);
+    }
+    .verse {
+      display: grid;
+      grid-template-columns: 28px 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid #f0e8d5;
+    }
+    .verse:last-child { border-bottom: none; }
+    .verse-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.6rem;
+      color: var(--gold);
+      font-weight: 500;
+      padding: 14px 0 14px 12px;
+      display: flex;
+      align-items: flex-start;
+      padding-top: 16px;
+    }
+    .verse-he {
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 1.05rem;
+      font-weight: 400;
+      line-height: 1.85;
+      direction: rtl;
+      text-align: right;
+      padding: 12px 14px 12px 10px;
+      border-right: 1px solid #f0e8d5;
+      color: var(--ink);
+    }
+    .verse-en {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.0rem;
+      line-height: 1.75;
+      padding: 12px 14px 12px 10px;
+      color: #2a2015;
+    }
+
+    /* ── COMMENTARY ── */
+    .commentary-panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 8px var(--shadow);
+    }
+    .commentary-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .commentary-icon {
+      width: 32px; height: 32px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .commentary-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .commentary-text {
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: #2a2015;
+    }
+    .commentary-text p { margin-bottom: 1em; }
+    .commentary-text p:last-child { margin-bottom: 0; }
+    .commentary-source {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    .generate-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 10px 20px;
+      background: var(--rust);
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: background 0.15s;
+      margin-top: 12px;
+    }
+    .generate-btn:hover { background: #a04020; }
+    .generate-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .generate-btn svg { width: 14px; height: 14px; fill: white; }
+
+    /* ── LOADING / SKELETON ── */
+    .loading {
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px;
+      padding: 48px 20px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .spinner {
+      width: 20px; height: 20px;
+      border: 2px solid var(--border);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .skeleton { animation: pulse 1.4s ease-in-out infinite; }
+    .skeleton-line {
+      height: 14px; border-radius: 3px;
+      background: var(--aged); margin-bottom: 10px;
+    }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
+
+    /* ── ORNAMENT ── */
+    .ornament {
+      text-align: center;
+      color: var(--gold);
+      font-size: 1.2rem;
+      letter-spacing: 0.5em;
+      margin: 28px 0;
+      opacity: 0.6;
+    }
+
+    /* ── INSTALL BANNER ── */
+    #install-banner {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--ink);
+      color: var(--parchment);
+      padding: 14px 20px;
+      padding-bottom: calc(14px + env(safe-area-inset-bottom, 0));
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 200;
+      box-shadow: 0 -4px 20px var(--shadow);
+    }
+    #install-banner.hidden { display: none !important; }
+    .install-text {
+      flex: 1;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      line-height: 1.4;
+    }
+    .install-text strong { color: var(--gold-light); }
+    .install-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      background: var(--gold);
+      color: var(--ink);
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    .dismiss-btn {
+      background: transparent;
+      border: none;
+      color: #5a4a35;
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 4px;
+      flex-shrink: 0;
+    }
+
+    /* ── ERROR ── */
+    .error-box {
+      background: #fdf3f0;
+      border: 1px solid #e8c4b8;
+      border-radius: 4px;
+      padding: 20px;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      color: var(--rust);
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 600px) {
+      .verse {
+        grid-template-columns: 20px 1fr;
+        grid-template-rows: auto auto;
+      }
+      .verse-num { grid-row: 1; grid-column: 1; padding: 10px 0 4px 10px; }
+      .verse-he { grid-row: 1; grid-column: 2; padding: 10px 12px 6px 8px; border-right: none; border-bottom: 1px solid #f0e8d5; font-size: 0.97rem; }
+      .verse-en { grid-row: 2; grid-column: 1 / span 2; padding: 6px 12px 10px 12px; font-size: 0.93rem; }
+      .parasha-name-he { font-size: 1.9rem; }
+      main { padding: 16px 10px 80px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-logo">תורה</div>
+    <div class="header-divider"></div>
+    <div class="header-title">
+      <span>Torah Daily</span>
+      Hebrew · English · Commentary
+    </div>
+  </div>
+  <div class="parasha-bar" id="parashot-bar">
+    <div class="loading" style="padding:8px 0; color:#8a7458; font-size:0.7rem;">Loading parashot…</div>
+  </div>
+</header>
+
+<main>
+  <div id="app-content">
+    <div class="loading"><div class="spinner"></div>Loading Torah…</div>
+  </div>
+</main>
+
+<!-- Install Banner -->
+<div id="install-banner" class="hidden">
+  <div class="install-text"><strong>Install Torah Daily</strong><br>Add to your home screen for offline access</div>
+  <button class="install-btn" id="install-btn">Install</button>
+  <button class="dismiss-btn" id="dismiss-btn">✕</button>
+</div>
+
+<script>
+// ── DATA: All 54 Parashot ──────────────────────────────────────────────────
+const PARASHOT = [
+  { id: 'Bereshit',     he: 'בְּרֵאשִׁית',    en: 'Bereshit',     book: 'Genesis',     ref: 'Genesis 1:1-6:8',   aliyot: ['Genesis 1:1-2:3','Genesis 2:4-2:19','Genesis 2:20-3:21','Genesis 3:22-4:26','Genesis 5:1-6:8'] },
+  { id: 'Noach',        he: 'נֹחַ',           en: 'Noach',         book: 'Genesis',     ref: 'Genesis 6:9-11:32', aliyot: ['Genesis 6:9-6:22','Genesis 7:1-7:16','Genesis 7:17-8:14','Genesis 8:15-9:7','Genesis 9:8-9:17','Genesis 9:18-10:32','Genesis 11:1-11:32'] },
+  { id: 'Lech-Lecha',   he: 'לֶךְ-לְךָ',      en: 'Lech Lecha',    book: 'Genesis',     ref: 'Genesis 12:1-17:27',aliyot: ['Genesis 12:1-12:13','Genesis 12:14-13:4','Genesis 13:5-13:18','Genesis 14:1-14:20','Genesis 14:21-15:6','Genesis 15:7-17:6','Genesis 17:7-17:27'] },
+  { id: 'Vayera',       he: 'וַיֵּרָא',        en: 'Vayera',        book: 'Genesis',     ref: 'Genesis 18:1-22:24',aliyot: ['Genesis 18:1-18:14','Genesis 18:15-18:33','Genesis 19:1-19:20','Genesis 19:21-21:4','Genesis 21:5-21:21','Genesis 21:22-21:34','Genesis 22:1-22:24'] },
+  { id: 'Chayei-Sara',  he: 'חַיֵּי שָׂרָה',   en: 'Chayei Sara',   book: 'Genesis',     ref: 'Genesis 23:1-25:18',aliyot: ['Genesis 23:1-23:16','Genesis 23:17-24:9','Genesis 24:10-24:26','Genesis 24:27-24:52','Genesis 24:53-24:67','Genesis 25:1-25:11','Genesis 25:12-25:18'] },
+  { id: 'Toldot',       he: 'תּוֹלְדֹת',       en: 'Toldot',        book: 'Genesis',     ref: 'Genesis 25:19-28:9',aliyot: ['Genesis 25:19-26:5','Genesis 26:6-26:12','Genesis 26:13-26:22','Genesis 26:23-26:29','Genesis 26:30-27:27','Genesis 27:28-28:4','Genesis 28:5-28:9'] },
+  { id: 'Vayetzei',     he: 'וַיֵּצֵא',        en: 'Vayetzei',      book: 'Genesis',     ref: 'Genesis 28:10-32:3',aliyot: ['Genesis 28:10-28:22','Genesis 29:1-29:17','Genesis 29:18-30:13','Genesis 30:14-30:27','Genesis 30:28-31:16','Genesis 31:17-31:42','Genesis 31:43-32:3'] },
+  { id: 'Vayishlach',   he: 'וַיִּשְׁלַח',     en: 'Vayishlach',    book: 'Genesis',     ref: 'Genesis 32:4-36:43',aliyot: ['Genesis 32:4-32:13','Genesis 32:14-32:30','Genesis 32:31-33:5','Genesis 33:6-33:20','Genesis 34:1-35:11','Genesis 35:12-36:19','Genesis 36:20-36:43'] },
+  { id: 'Vayeshev',     he: 'וַיֵּשֶׁב',        en: 'Vayeshev',      book: 'Genesis',     ref: 'Genesis 37:1-40:23',aliyot: ['Genesis 37:1-37:11','Genesis 37:12-37:22','Genesis 37:23-37:36','Genesis 38:1-38:30','Genesis 39:1-39:6','Genesis 39:7-40:11','Genesis 40:12-40:23'] },
+  { id: 'Miketz',       he: 'מִקֵּץ',          en: 'Miketz',        book: 'Genesis',     ref: 'Genesis 41:1-44:17',aliyot: ['Genesis 41:1-41:14','Genesis 41:15-41:38','Genesis 41:39-41:52','Genesis 41:53-42:18','Genesis 42:19-43:15','Genesis 43:16-43:29','Genesis 43:30-44:17'] },
+  { id: 'Vayigash',     he: 'וַיִּגַּשׁ',       en: 'Vayigash',      book: 'Genesis',     ref: 'Genesis 44:18-47:27',aliyot: ['Genesis 44:18-44:30','Genesis 44:31-45:7','Genesis 45:8-45:18','Genesis 45:19-45:27','Genesis 45:28-46:27','Genesis 46:28-47:10','Genesis 47:11-47:27'] },
+  { id: 'Vayechi',      he: 'וַיְחִי',          en: 'Vayechi',       book: 'Genesis',     ref: 'Genesis 47:28-50:26',aliyot: ['Genesis 47:28-48:9','Genesis 48:10-48:16','Genesis 48:17-48:22','Genesis 49:1-49:18','Genesis 49:19-49:26','Genesis 49:27-50:20','Genesis 50:21-50:26'] },
+  { id: 'Shemot',       he: 'שְׁמוֹת',         en: 'Shemot',        book: 'Exodus',      ref: 'Exodus 1:1-6:1',    aliyot: ['Exodus 1:1-1:17','Exodus 1:18-2:10','Exodus 2:11-2:25','Exodus 3:1-3:15','Exodus 3:16-4:17','Exodus 4:18-5:23','Exodus 6:1'] },
+  { id: 'Vaera',        he: 'וָאֵרָא',          en: "Va'era",        book: 'Exodus',      ref: 'Exodus 6:2-9:35',   aliyot: ['Exodus 6:2-6:13','Exodus 6:14-6:28','Exodus 6:29-7:7','Exodus 7:8-7:25','Exodus 8:1-8:28','Exodus 9:1-9:16','Exodus 9:17-9:35'] },
+  { id: 'Bo',           he: 'בֹּא',             en: 'Bo',            book: 'Exodus',      ref: 'Exodus 10:1-13:16', aliyot: ['Exodus 10:1-10:11','Exodus 10:12-10:23','Exodus 10:24-11:3','Exodus 11:4-12:20','Exodus 12:21-12:28','Exodus 12:29-12:51','Exodus 13:1-13:16'] },
+  { id: 'Beshalach',    he: 'בְּשַׁלַּח',        en: 'Beshalach',     book: 'Exodus',      ref: 'Exodus 13:17-17:16',aliyot: ['Exodus 13:17-14:8','Exodus 14:9-14:14','Exodus 14:15-25','Exodus 14:26-15:26','Exodus 15:27-16:10','Exodus 16:11-16:36','Exodus 17:1-17:16'] },
+  { id: 'Yitro',        he: 'יִתְרוֹ',          en: 'Yitro',         book: 'Exodus',      ref: 'Exodus 18:1-20:23', aliyot: ['Exodus 18:1-18:12','Exodus 18:13-18:23','Exodus 18:24-18:27','Exodus 19:1-19:6','Exodus 19:7-19:19','Exodus 19:20-20:14','Exodus 20:15-20:23'] },
+  { id: 'Mishpatim',    he: 'מִּשְׁפָּטִים',     en: 'Mishpatim',     book: 'Exodus',      ref: 'Exodus 21:1-24:18', aliyot: ['Exodus 21:1-21:19','Exodus 21:20-22:3','Exodus 22:4-22:26','Exodus 22:27-23:5','Exodus 23:6-23:19','Exodus 23:20-23:25','Exodus 23:26-24:18'] },
+  { id: 'Terumah',      he: 'תְּרוּמָה',         en: 'Terumah',       book: 'Exodus',      ref: 'Exodus 25:1-27:19', aliyot: ['Exodus 25:1-25:16','Exodus 25:17-25:30','Exodus 25:31-26:14','Exodus 26:15-26:30','Exodus 26:31-26:37','Exodus 27:1-27:8','Exodus 27:9-27:19'] },
+  { id: 'Tetzaveh',     he: 'תְּצַוֶּה',         en: 'Tetzaveh',      book: 'Exodus',      ref: 'Exodus 27:20-30:10',aliyot: ['Exodus 27:20-28:12','Exodus 28:13-28:30','Exodus 28:31-28:43','Exodus 29:1-29:18','Exodus 29:19-29:37','Exodus 29:38-29:46','Exodus 30:1-30:10'] },
+  { id: 'Ki-Tisa',      he: 'כִּי תִשָּׂא',      en: 'Ki Tisa',       book: 'Exodus',      ref: 'Exodus 30:11-34:35',aliyot: ['Exodus 30:11-31:17','Exodus 31:18-33:11','Exodus 33:12-33:16','Exodus 33:17-33:23','Exodus 34:1-34:9','Exodus 34:10-34:26','Exodus 34:27-34:35'] },
+  { id: 'Vayakhel',     he: 'וַיַּקְהֵל',        en: 'Vayakhel',      book: 'Exodus',      ref: 'Exodus 35:1-38:20', aliyot: ['Exodus 35:1-35:20','Exodus 35:21-35:29','Exodus 35:30-36:7','Exodus 36:8-36:19','Exodus 36:20-37:16','Exodus 37:17-37:29','Exodus 38:1-38:20'] },
+  { id: 'Pekudei',      he: 'פְקוּדֵי',          en: 'Pekudei',       book: 'Exodus',      ref: 'Exodus 38:21-40:38',aliyot: ['Exodus 38:21-39:1','Exodus 39:2-39:21','Exodus 39:22-39:32','Exodus 39:33-39:43','Exodus 40:1-40:16','Exodus 40:17-40:27','Exodus 40:28-40:38'] },
+  { id: 'Vayikra',      he: 'וַיִּקְרָא',        en: 'Vayikra',       book: 'Leviticus',   ref: 'Leviticus 1:1-5:26',aliyot: ['Leviticus 1:1-1:13','Leviticus 1:14-2:6','Leviticus 2:7-2:16','Leviticus 3:1-3:17','Leviticus 4:1-4:26','Leviticus 4:27-5:10','Leviticus 5:11-5:26'] },
+  { id: 'Tzav',         he: 'צַו',               en: 'Tzav',          book: 'Leviticus',   ref: 'Leviticus 6:1-8:36',aliyot: ['Leviticus 6:1-6:11','Leviticus 6:12-7:10','Leviticus 7:11-7:38','Leviticus 8:1-8:13','Leviticus 8:14-8:21','Leviticus 8:22-8:29','Leviticus 8:30-8:36'] },
+  { id: 'Shmini',       he: 'שְּׁמִינִי',         en: 'Shmini',        book: 'Leviticus',   ref: 'Leviticus 9:1-11:47',aliyot: ['Leviticus 9:1-9:16','Leviticus 9:17-9:23','Leviticus 10:1-10:11','Leviticus 10:12-10:15','Leviticus 10:16-10:20','Leviticus 11:1-11:32','Leviticus 11:33-11:47'] },
+  { id: 'Tazria',       he: 'תַזְרִיעַ',          en: 'Tazria',        book: 'Leviticus',   ref: 'Leviticus 12:1-13:59',aliyot: ['Leviticus 12:1-12:8','Leviticus 13:1-13:17','Leviticus 13:18-13:23','Leviticus 13:24-13:28','Leviticus 13:29-13:39','Leviticus 13:40-13:54','Leviticus 13:55-13:59'] },
+  { id: 'Metzora',      he: 'מְּצֹרָע',           en: 'Metzora',       book: 'Leviticus',   ref: 'Leviticus 14:1-15:33',aliyot: ['Leviticus 14:1-14:12','Leviticus 14:13-14:20','Leviticus 14:21-14:32','Leviticus 14:33-14:53','Leviticus 14:54-15:15','Leviticus 15:16-15:28','Leviticus 15:29-15:33'] },
+  { id: 'Achrei-Mot',   he: 'אַחֲרֵי מוֹת',       en: 'Achrei Mot',    book: 'Leviticus',   ref: 'Leviticus 16:1-18:30',aliyot: ['Leviticus 16:1-16:17','Leviticus 16:18-16:24','Leviticus 16:25-16:34','Leviticus 17:1-17:7','Leviticus 17:8-18:5','Leviticus 18:6-18:21','Leviticus 18:22-18:30'] },
+  { id: 'Kedoshim',     he: 'קְדֹשִׁים',          en: 'Kedoshim',      book: 'Leviticus',   ref: 'Leviticus 19:1-20:27',aliyot: ['Leviticus 19:1-19:14','Leviticus 19:15-19:22','Leviticus 19:23-19:32','Leviticus 19:33-19:37','Leviticus 20:1-20:7','Leviticus 20:8-20:22','Leviticus 20:23-20:27'] },
+  { id: 'Emor',         he: 'אֱמֹר',             en: 'Emor',          book: 'Leviticus',   ref: 'Leviticus 21:1-24:23',aliyot: ['Leviticus 21:1-21:15','Leviticus 21:16-22:16','Leviticus 22:17-22:33','Leviticus 23:1-23:22','Leviticus 23:23-23:32','Leviticus 23:33-23:44','Leviticus 24:1-24:23'] },
+  { id: 'Behar',        he: 'בְּהַר',             en: 'Behar',         book: 'Leviticus',   ref: 'Leviticus 25:1-26:2',aliyot: ['Leviticus 25:1-25:13','Leviticus 25:14-25:18','Leviticus 25:19-25:24','Leviticus 25:25-25:28','Leviticus 25:29-25:38','Leviticus 25:39-25:46','Leviticus 25:47-26:2'] },
+  { id: 'Bechukotai',   he: 'בְּחֻקֹּתַי',        en: 'Bechukotai',    book: 'Leviticus',   ref: 'Leviticus 26:3-27:34',aliyot: ['Leviticus 26:3-26:5','Leviticus 26:6-26:9','Leviticus 26:10-26:46','Leviticus 27:1-27:15','Leviticus 27:16-27:21','Leviticus 27:22-27:28','Leviticus 27:29-27:34'] },
+  { id: 'Bamidbar',     he: 'בְּמִדְבַּר',        en: 'Bamidbar',      book: 'Numbers',     ref: 'Numbers 1:1-4:20',   aliyot: ['Numbers 1:1-1:19','Numbers 1:20-1:54','Numbers 2:1-2:34','Numbers 3:1-3:13','Numbers 3:14-3:39','Numbers 3:40-3:51','Numbers 4:1-4:20'] },
+  { id: 'Nasso',        he: 'נָשֹׂא',             en: 'Nasso',         book: 'Numbers',     ref: 'Numbers 4:21-7:89',  aliyot: ['Numbers 4:21-4:37','Numbers 4:38-4:49','Numbers 5:1-5:10','Numbers 5:11-6:27','Numbers 7:1-7:41','Numbers 7:42-7:71','Numbers 7:72-7:89'] },
+  { id: 'Beha\'alotcha', he: "בְּהַעֲלֹתְךָ",      en: "Beha'alotcha",  book: 'Numbers',     ref: 'Numbers 8:1-12:16',  aliyot: ['Numbers 8:1-8:14','Numbers 8:15-8:26','Numbers 9:1-9:14','Numbers 9:15-10:10','Numbers 10:11-10:34','Numbers 10:35-11:29','Numbers 11:30-12:16'] },
+  { id: 'Shlach',       he: 'שְׁלַח',             en: 'Shlach',        book: 'Numbers',     ref: 'Numbers 13:1-15:41', aliyot: ['Numbers 13:1-13:20','Numbers 13:21-14:7','Numbers 14:8-14:25','Numbers 14:26-15:7','Numbers 15:8-15:16','Numbers 15:17-15:26','Numbers 15:27-15:41'] },
+  { id: 'Korach',       he: 'קֹרַח',              en: 'Korach',        book: 'Numbers',     ref: 'Numbers 16:1-18:32', aliyot: ['Numbers 16:1-16:13','Numbers 16:14-16:19','Numbers 16:20-17:8','Numbers 17:9-17:15','Numbers 17:16-17:24','Numbers 17:25-18:20','Numbers 18:21-18:32'] },
+  { id: 'Chukat',       he: 'חֻקַּת',             en: 'Chukat',        book: 'Numbers',     ref: 'Numbers 19:1-22:1',  aliyot: ['Numbers 19:1-19:17','Numbers 19:18-20:6','Numbers 20:7-20:13','Numbers 20:14-20:21','Numbers 20:22-21:9','Numbers 21:10-21:20','Numbers 21:21-22:1'] },
+  { id: 'Balak',        he: 'בָּלָק',              en: 'Balak',         book: 'Numbers',     ref: 'Numbers 22:2-25:9',  aliyot: ['Numbers 22:2-22:12','Numbers 22:13-22:20','Numbers 22:21-22:38','Numbers 22:39-23:12','Numbers 23:13-23:26','Numbers 23:27-24:13','Numbers 24:14-25:9'] },
+  { id: 'Pinchas',      he: 'פִּינְחָס',           en: 'Pinchas',       book: 'Numbers',     ref: 'Numbers 25:10-30:1', aliyot: ['Numbers 25:10-26:4','Numbers 26:5-26:51','Numbers 26:52-27:5','Numbers 27:6-27:23','Numbers 28:1-28:15','Numbers 28:16-29:11','Numbers 29:12-30:1'] },
+  { id: 'Matot',        he: 'מַּטּוֹת',            en: 'Matot',         book: 'Numbers',     ref: 'Numbers 30:2-32:42', aliyot: ['Numbers 30:2-30:9','Numbers 30:10-31:12','Numbers 31:13-31:24','Numbers 31:25-31:41','Numbers 31:42-31:54','Numbers 32:1-32:19','Numbers 32:20-32:42'] },
+  { id: 'Masei',        he: 'מַסְעֵי',             en: 'Masei',         book: 'Numbers',     ref: 'Numbers 33:1-36:13', aliyot: ['Numbers 33:1-33:10','Numbers 33:11-33:49','Numbers 33:50-34:15','Numbers 34:16-34:29','Numbers 35:1-35:8','Numbers 35:9-35:34','Numbers 36:1-36:13'] },
+  { id: 'Devarim',      he: 'דְּבָרִים',           en: 'Devarim',       book: 'Deuteronomy', ref: 'Deuteronomy 1:1-3:22',aliyot: ['Deuteronomy 1:1-1:10','Deuteronomy 1:11-1:21','Deuteronomy 1:22-1:38','Deuteronomy 1:39-2:1','Deuteronomy 2:2-2:30','Deuteronomy 2:31-3:14','Deuteronomy 3:15-3:22'] },
+  { id: 'Vaetchanan',   he: 'וָאֶתְחַנַּן',        en: "Va'etchanan",   book: 'Deuteronomy', ref: 'Deuteronomy 3:23-7:11',aliyot: ['Deuteronomy 3:23-4:4','Deuteronomy 4:5-4:40','Deuteronomy 4:41-4:49','Deuteronomy 5:1-5:18','Deuteronomy 5:19-6:3','Deuteronomy 6:4-6:25','Deuteronomy 7:1-7:11'] },
+  { id: 'Eikev',        he: 'עֵקֶב',               en: 'Eikev',         book: 'Deuteronomy', ref: 'Deuteronomy 7:12-11:25',aliyot: ['Deuteronomy 7:12-8:10','Deuteronomy 8:11-9:3','Deuteronomy 9:4-9:29','Deuteronomy 10:1-10:11','Deuteronomy 10:12-11:9','Deuteronomy 11:10-11:21','Deuteronomy 11:22-11:25'] },
+  { id: 'Reeh',         he: 'רְאֵה',               en: "Re'eh",         book: 'Deuteronomy', ref: 'Deuteronomy 11:26-16:17',aliyot: ['Deuteronomy 11:26-12:10','Deuteronomy 12:11-12:28','Deuteronomy 12:29-13:19','Deuteronomy 14:1-14:21','Deuteronomy 14:22-14:29','Deuteronomy 15:1-15:18','Deuteronomy 15:19-16:17'] },
+  { id: 'Shoftim',      he: 'שׁוֹפְטִים',          en: 'Shoftim',       book: 'Deuteronomy', ref: 'Deuteronomy 16:18-21:9',aliyot: ['Deuteronomy 16:18-17:13','Deuteronomy 17:14-17:20','Deuteronomy 18:1-18:5','Deuteronomy 18:6-19:13','Deuteronomy 19:14-20:9','Deuteronomy 20:10-21:9','Deuteronomy 21:1-21:9'] },
+  { id: 'Ki-Teitzei',   he: 'כִּי תֵצֵא',          en: 'Ki Teitzei',    book: 'Deuteronomy', ref: 'Deuteronomy 21:10-25:19',aliyot: ['Deuteronomy 21:10-21:21','Deuteronomy 21:22-22:7','Deuteronomy 22:8-23:7','Deuteronomy 23:8-23:25','Deuteronomy 24:1-24:4','Deuteronomy 24:5-24:13','Deuteronomy 24:14-25:19'] },
+  { id: 'Ki-Tavo',      he: 'כִּי תָבוֹא',         en: 'Ki Tavo',       book: 'Deuteronomy', ref: 'Deuteronomy 26:1-29:8',aliyot: ['Deuteronomy 26:1-26:11','Deuteronomy 26:12-26:15','Deuteronomy 26:16-27:8','Deuteronomy 27:9-27:26','Deuteronomy 28:1-28:6','Deuteronomy 28:7-28:69','Deuteronomy 29:1-29:8'] },
+  { id: 'Nitzavim',     he: 'נִצָּבִים',           en: 'Nitzavim',      book: 'Deuteronomy', ref: 'Deuteronomy 29:9-30:20',aliyot: ['Deuteronomy 29:9-29:11','Deuteronomy 29:12-29:14','Deuteronomy 29:15-29:28','Deuteronomy 30:1-30:6','Deuteronomy 30:7-30:10','Deuteronomy 30:11-30:14','Deuteronomy 30:15-30:20'] },
+  { id: 'Vayeilech',    he: 'וַיֵּלֶךְ',           en: 'Vayeilech',     book: 'Deuteronomy', ref: 'Deuteronomy 31:1-31:30',aliyot: ['Deuteronomy 31:1-31:3','Deuteronomy 31:4-31:6','Deuteronomy 31:7-31:9','Deuteronomy 31:10-31:13','Deuteronomy 31:14-31:19','Deuteronomy 31:20-31:24','Deuteronomy 31:25-31:30'] },
+  { id: 'Haazinu',      he: 'הַאֲזִינוּ',          en: "Ha'azinu",      book: 'Deuteronomy', ref: 'Deuteronomy 32:1-32:52',aliyot: ['Deuteronomy 32:1-32:6','Deuteronomy 32:7-32:12','Deuteronomy 32:13-32:18','Deuteronomy 32:19-32:28','Deuteronomy 32:29-32:39','Deuteronomy 32:40-32:43','Deuteronomy 32:44-32:52'] },
+  { id: 'V\'Zot-HaBerachah', he: 'וְזֹאת הַבְּרָכָה', en: "V'Zot HaBerachah", book: 'Deuteronomy', ref: 'Deuteronomy 33:1-34:12',aliyot: ['Deuteronomy 33:1-33:7','Deuteronomy 33:8-33:12','Deuteronomy 33:13-33:17','Deuteronomy 33:18-33:21','Deuteronomy 33:22-33:26','Deuteronomy 33:27-34:5','Deuteronomy 34:6-34:12'] },
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let state = {
+  parashaIdx: 0,
+  aliyahIdx: 0,
+  tab: 'text',   // 'text' | 'commentary'
+  audioLang: 'en',
+  verses: [],
+  commentary: '',
+  loading: false,
+  speaking: false,
+  utterance: null,
+};
+
+// ── SEFARIA API ────────────────────────────────────────────────────────────
+async function fetchVerses(ref) {
+  const encoded = encodeURIComponent(ref);
+  const url = `https://www.sefaria.org/api/texts/${encoded}?context=0&commentary=0&pad=0`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Sefaria API error: ${res.status}`);
+  return res.json();
+}
+
+function parseVerses(data) {
+  const he = data.he || [];
+  const en = Array.isArray(data.text) ? data.text : (data.text ? [data.text] : []);
+  const maxLen = Math.max(he.length, en.length);
+  const startVerse = data.sections ? data.sections[data.sections.length - 1] : 1;
+  const verses = [];
+  for (let i = 0; i < maxLen; i++) {
+    verses.push({
+      num: startVerse + i,
+      he: (he[i] || '').replace(/<[^>]+>/g, '').trim(),
+      en: (Array.isArray(en[i]) ? en[i].join(' ') : (en[i] || '')).replace(/<[^>]+>/g, '').trim(),
+    });
+  }
+  return verses.filter(v => v.he || v.en);
+}
+
+// ── CLAUDE COMMENTARY ─────────────────────────────────────────────────────
+async function generateCommentary(parasha, aliyahRef, verseText) {
+  const prompt = `You are a knowledgeable Torah scholar and educator. Provide a thoughtful, accessible commentary on this Torah passage.
+
+Parasha: ${parasha.en} (${parasha.he})
+Passage: ${aliyahRef}
+Text: ${verseText.slice(0, 800)}
+
+Write 3-4 paragraphs covering:
+1. The immediate context and what is happening in this passage
+2. A key theme or lesson from the text, drawing on classical commentators (Rashi, Ramban, etc.) where relevant
+3. A meaningful insight for modern readers — something personally applicable
+4. A short reflection question to carry through the day
+
+Keep the tone warm, scholarly but accessible. Do not use headers or bullet points — flowing prose only.`;
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1000,
+      messages: [{ role: 'user', content: prompt }],
+    }),
+  });
+  if (!res.ok) throw new Error('Commentary API error');
+  const data = await res.json();
+  return data.content.map(b => b.text || '').join('');
+}
+
+// ── AUDIO ─────────────────────────────────────────────────────────────────
+function stopAudio() {
+  window.speechSynthesis.cancel();
+  state.speaking = false;
+  updatePlayBtn(false);
+}
+
+function updatePlayBtn(playing) {
+  const btn = document.getElementById('play-btn');
+  if (!btn) return;
+  btn.innerHTML = playing
+    ? `<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`
+    : `<svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>`;
+}
+
+function readAloud() {
+  if (state.speaking) { stopAudio(); return; }
+  const lang = state.audioLang;
+  const text = state.verses.map(v => lang === 'he' ? v.he : v.en).filter(Boolean).join(' ');
+  if (!text) return;
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = lang === 'he' ? 'he-IL' : 'en-US';
+  utterance.rate = lang === 'he' ? 0.85 : 0.95;
+  utterance.onstart = () => { state.speaking = true; updatePlayBtn(true); };
+  utterance.onend = () => { state.speaking = false; updatePlayBtn(false); };
+  utterance.onerror = () => { state.speaking = false; updatePlayBtn(false); };
+  window.speechSynthesis.speak(utterance);
+  state.utterance = utterance;
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────
+function renderParashotBar() {
+  const bar = document.getElementById('parashot-bar');
+  bar.innerHTML = PARASHOT.map((p, i) =>
+    `<button class="parasha-chip${i === state.parashaIdx ? ' active' : ''}" onclick="selectParasha(${i})">${p.en}</button>`
+  ).join('');
+}
+
+function renderApp() {
+  const p = PARASHOT[state.parashaIdx];
+  const aliyahRef = p.aliyot[state.aliyahIdx] || p.ref;
+  const content = document.getElementById('app-content');
+
+  const aliyahLabels = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th'];
+
+  content.innerHTML = `
+    <div class="parasha-header">
+      <div class="parasha-eyebrow">${p.book} · Weekly Portion ${state.parashaIdx + 1} of 54</div>
+      <div class="parasha-name-he">${p.he}</div>
+      <div class="parasha-name-en">${p.en}</div>
+      <div class="parasha-meta">${p.ref}</div>
+    </div>
+
+    <div class="audio-panel">
+      <button class="audio-btn" id="play-btn" onclick="readAloud()">
+        <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+      </button>
+      <div class="audio-info">
+        <div class="audio-label">Read Aloud</div>
+        <div class="audio-title">${p.en} · Aliyah ${state.aliyahIdx + 1}</div>
+        <input type="range" class="audio-progress" value="0" min="0" max="100" />
+      </div>
+      <div class="audio-lang-toggle">
+        <button class="lang-btn${state.audioLang === 'en' ? ' active' : ''}" onclick="setAudioLang('en')">EN</button>
+        <button class="lang-btn${state.audioLang === 'he' ? ' active' : ''}" onclick="setAudioLang('he')">עב</button>
+      </div>
+    </div>
+
+    <div class="aliyah-nav">
+      ${p.aliyot.map((_, i) =>
+        `<button class="aliyah-btn${i === state.aliyahIdx ? ' active' : ''}" onclick="selectAliyah(${i})">${aliyahLabels[i] || (i+1)+'th'} Aliyah</button>`
+      ).join('')}
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn${state.tab === 'text' ? ' active' : ''}" onclick="setTab('text')">Torah Text</button>
+      <button class="tab-btn${state.tab === 'commentary' ? ' active' : ''}" onclick="setTab('commentary')">Commentary</button>
+    </div>
+
+    <div id="tab-content">
+      ${state.tab === 'text' ? renderTextTab() : renderCommentaryTab()}
+    </div>
+
+    <div class="ornament">✦ · ✦ · ✦</div>
+  `;
+}
+
+function renderTextTab() {
+  if (state.loading) {
+    return `<div class="loading"><div class="spinner"></div>Loading passage…</div>`;
+  }
+  if (!state.verses.length) {
+    return `<div class="error-box">Could not load this passage. Check your connection and try again.</div>`;
+  }
+  return `
+    <div class="passage">
+      <div style="display:grid; grid-template-columns:28px 1fr 1fr; background:var(--aged); padding:8px 0; border-bottom:1px solid var(--border);">
+        <div></div>
+        <div style="font-family:'Frank Ruhl Libre',serif; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); text-align:right; padding:0 14px 0 10px; direction:rtl;">עִבְרִית</div>
+        <div style="font-family:'Inter',sans-serif; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); padding:0 0 0 10px;">English</div>
+      </div>
+      ${state.verses.map(v => `
+        <div class="verse">
+          <div class="verse-num">${v.num}</div>
+          <div class="verse-he">${v.he}</div>
+          <div class="verse-en">${v.en}</div>
+        </div>
+      `).join('')}
+    </div>`;
+}
+
+function renderCommentaryTab() {
+  if (state.loading) {
+    return `<div class="loading"><div class="spinner"></div>Generating commentary…</div>`;
+  }
+  if (state.commentary) {
+    return `
+      <div class="commentary-panel">
+        <div class="commentary-header">
+          <div class="commentary-icon">📜</div>
+          <div>
+            <div class="commentary-title">Commentary & Explanation</div>
+          </div>
+        </div>
+        <div class="commentary-text">
+          ${state.commentary.split('\n').filter(p => p.trim()).map(p => `<p>${p}</p>`).join('')}
+        </div>
+        <div class="commentary-source">Generated by Claude · Based on classical and modern Torah scholarship</div>
+      </div>
+      <button class="generate-btn" onclick="loadCommentary(true)">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+        Regenerate Commentary
+      </button>`;
+  }
+  return `
+    <div class="commentary-panel" style="text-align:center;">
+      <div style="font-size:2rem; margin-bottom:12px;">📖</div>
+      <div style="font-family:'EB Garamond',serif; font-size:1.1rem; color:var(--muted); margin-bottom:16px;">
+        Get AI-powered commentary drawing on Rashi, Ramban, and modern insights.
+      </div>
+      <button class="generate-btn" onclick="loadCommentary(false)">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+        Generate Commentary
+      </button>
+    </div>`;
+}
+
+// ── ACTIONS ────────────────────────────────────────────────────────────────
+async function loadPassage() {
+  stopAudio();
+  state.loading = true;
+  state.verses = [];
+  state.commentary = '';
+  renderApp();
+
+  const p = PARASHOT[state.parashaIdx];
+  const ref = p.aliyot[state.aliyahIdx] || p.ref;
+  try {
+    const data = await fetchVerses(ref);
+    state.verses = parseVerses(data);
+  } catch (e) {
+    console.error(e);
+    state.verses = [];
+  }
+  state.loading = false;
+  renderApp();
+}
+
+async function loadCommentary(regenerate = false) {
+  if (state.loading) return;
+  state.loading = true;
+  state.tab = 'commentary';
+  renderApp();
+
+  const p = PARASHOT[state.parashaIdx];
+  const ref = p.aliyot[state.aliyahIdx] || p.ref;
+  const sampleText = state.verses.slice(0, 5).map(v => `${v.num}. ${v.en}`).join(' ');
+
+  try {
+    state.commentary = await generateCommentary(p, ref, sampleText);
+  } catch (e) {
+    console.error(e);
+    state.commentary = 'Commentary could not be generated at this time. Please check your connection and try again.';
+  }
+  state.loading = false;
+  renderApp();
+}
+
+function selectParasha(idx) {
+  state.parashaIdx = idx;
+  state.aliyahIdx = 0;
+  renderParashotBar();
+  loadPassage();
+  // scroll bar chip into view
+  setTimeout(() => {
+    const chips = document.querySelectorAll('.parasha-chip');
+    if (chips[idx]) chips[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }, 50);
+}
+
+function selectAliyah(idx) {
+  state.aliyahIdx = idx;
+  loadPassage();
+}
+
+function setTab(tab) {
+  state.tab = tab;
+  renderApp();
+}
+
+function setAudioLang(lang) {
+  stopAudio();
+  state.audioLang = lang;
+  renderApp();
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+function getCurrentParasha() {
+  // Simple weekly cycle: week of year mod 54
+  const start = new Date(2024, 8, 28); // Bereshit ~Sept 28, 2024
+  const now = new Date();
+  const weeks = Math.floor((now - start) / (7 * 24 * 60 * 60 * 1000));
+  return ((weeks % 54) + 54) % 54;
+}
+
+renderParashotBar();
+state.parashaIdx = getCurrentParasha();
+loadPassage();
+renderParashotBar(); // re-render with correct active
+
+// ── PWA INSTALL ────────────────────────────────────────────────────────────
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-banner').classList.remove('hidden');
+});
+
+document.getElementById('install-btn')?.addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById('install-banner').classList.add('hidden');
+});
+
+document.getElementById('dismiss-btn')?.addEventListener('click', () => {
+  document.getElementById('install-banner').classList.add('hidden');
+});
+
+// ── SERVICE WORKER ─────────────────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(console.error);
+}
+</script>
+</body>
+</html>
